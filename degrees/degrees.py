@@ -93,8 +93,49 @@ def shortest_path(source, target):
     """
 
     # TODO
-    raise NotImplementedError
+    start = Node(state=source, parent=None, action=None)
+    frontier = QueueFrontier()
+    frontier.add(start)
 
+     # Initialize an empty explored set
+    explored = set()
+
+    # Keep looping until solution found
+    while True:
+        # If nothing left in frontier, then no path
+        if frontier.empty():
+            return None
+        
+        # Choose a node from the frontier
+        node = frontier.remove()
+
+        # Marking node as explored
+        explored.add(node.state)
+
+        # If node is the goal, then we have a solution
+        # if node.state == target:
+        #     moives = []
+        #     persons = []
+        #     while node.parent is not None:
+        #         moives.append(node.action)
+        #         persons.append(node.state)
+        #         node = node.parent
+        #     moives.reverse()
+        #     persons.reverse()
+        #     solution = (moives, persons)
+        #     return
+        # Add neighbors to frontier
+        for movie, person in neighbors_for_person(node.state):
+            if not frontier.contains_state(person) and person not in explored:
+                child = Node(state=person, parent=node, action=movie)
+                if child.state == target:
+                    solution = []
+                    while child.parent is not None:
+                        solution.append((child.action, child.state))
+                        child = child.parent
+                    solution.reverse()
+                    return solution
+                frontier.add(child)
 
 def person_id_for_name(name):
     """
